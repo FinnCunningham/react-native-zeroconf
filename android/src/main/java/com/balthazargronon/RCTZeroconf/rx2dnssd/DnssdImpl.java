@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.List;
+import java.net.UnknownHostException;
 
 import javax.annotation.Nullable;
 

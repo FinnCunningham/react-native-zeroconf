@@ -6,6 +6,7 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.util.Log;
 
 import com.balthazargronon.RCTZeroconf.Zeroconf;
 import com.balthazargronon.RCTZeroconf.ZeroconfModule;
@@ -17,6 +18,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
+import java.net.UnknownHostException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
