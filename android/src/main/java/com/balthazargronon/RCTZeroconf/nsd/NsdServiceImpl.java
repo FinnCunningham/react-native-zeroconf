@@ -20,6 +20,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
+import java.net.Inet6Address;
+import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -223,9 +225,22 @@ public class NsdServiceImpl implements Zeroconf {
             service.putString(ZeroconfModule.KEY_SERVICE_HOST, host.getHostName());
 
             WritableArray addresses = new WritableNativeArray();
-            addresses.pushString(host.getHostAddress());
+            WritableMap addressesDict = new WritableNativeMap();
+            String hostAddress = host.getHostAddress();
+            addresses.pushString(hostAddress);
+            try {
+                InetAddress address = InetAddress.getByName(hostAddress);
+                if (address instanceof Inet4Address) {
+                    addressesDict.putString("IPv4", hostAddress);
+                } else if (address instanceof Inet6Address) {
+                    addressesDict.putString("IPv6", hostAddress);
+                }
+            } catch(UnknownHostException e) {
+                  Log.d("TAG", "Address is not IPv4 or IPv6: " + hostAddress);
+            }
 
             service.putArray(ZeroconfModule.KEY_SERVICE_ADDRESSES, addresses);
+            service.putMap(ZeroconfModule.KEY_SERVICE_ADDRESSES_DICT, addressesDict);
         }
         service.putString(ZeroconfModule.KEY_SERVICE_FULL_NAME, fullServiceName);
         service.putInt(ZeroconfModule.KEY_SERVICE_PORT, serviceInfo.getPort());

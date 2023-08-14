@@ -19,6 +19,8 @@ import com.github.druk.rx2dnssd.Rx2Dnssd;
 import com.github.druk.rx2dnssd.Rx2DnssdBindable;
 
 import java.net.InetAddress;
+import java.net.Inet6Address;
+import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -92,13 +94,26 @@ public class DnssdImpl implements Zeroconf {
         service.putString(ZeroconfModule.KEY_SERVICE_HOST, fullServiceName);
 
         WritableArray addresses = new WritableNativeArray();
+        WritableMap addressesDict = new WritableNativeMap();
         for (InetAddress host : hostList) {
-            addresses.pushString(host.getHostAddress());
+            String hostAddress = host.getHostAddress();
+            try {
+                InetAddress address = InetAddress.getByName(hostAddress);
+                if (address instanceof Inet4Address) {
+                    addressesDict.putString("IPv4", hostAddress);
+                } else if (address instanceof Inet6Address) {
+                    addressesDict.putString("IPv6", hostAddress);
+                }
+            } catch(UnknownHostException e) {
+                  Log.d("TAG", "Address is not IPv4 or IPv6: " + hostAddress);
+            }
+            addresses.pushString(hostAddress);
         }
 
         service.putArray(ZeroconfModule.KEY_SERVICE_ADDRESSES, addresses);
         service.putString(ZeroconfModule.KEY_SERVICE_FULL_NAME, fullServiceName);
         service.putInt(ZeroconfModule.KEY_SERVICE_PORT, serviceInfo.getPort());
+        service.putMap(ZeroconfModule.KEY_SERVICE_ADDRESSES_DICT, addressesDict);
 
         WritableMap txtRecords = new WritableNativeMap();
 

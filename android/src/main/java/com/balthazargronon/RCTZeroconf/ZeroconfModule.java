@@ -34,6 +34,7 @@ public class ZeroconfModule extends ReactContextBaseJavaModule {
     public static final String KEY_SERVICE_HOST = "host";
     public static final String KEY_SERVICE_PORT = "port";
     public static final String KEY_SERVICE_ADDRESSES = "addresses";
+    public static final String KEY_SERVICE_ADDRESSES_DICT = "addressesDict";
     public static final String KEY_SERVICE_TXT = "txt";
 
     private ZeroConfImplFactory zeroConfFactory;
